@@ -29,7 +29,7 @@ const PATIENT_PLANS = {
  */
 function buildAppointmentDate(dateStr) {
   const parts = dateStr.split('-');
-  return new Date(parts[0], parts[1], parts[2]);
+  return new Date(parts[0], parts[1] - 1, parts[2]);
 }
 
 /**
