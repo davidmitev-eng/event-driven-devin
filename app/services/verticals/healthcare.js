@@ -39,7 +39,7 @@ function getCoveragePeriod(patientId, appointmentDate) {
   const plan = PATIENT_PLANS[patientId];
   if (!plan) return null;
 
-  const coverageEnd = new Date(plan.coverageEndDate);
+  const coverageEnd = new Date(plan.coverageEnd);
   if (isNaN(coverageEnd.getTime()) || appointmentDate > coverageEnd) return null;
 
   return plan;
@@ -65,6 +65,9 @@ async function scheduleAppointment(data) {
 
     const apptDate = buildAppointmentDate(data.appointmentDate);
     const coverage = getCoveragePeriod(data.patientId, apptDate);
+    if (!coverage) {
+      throw new Error(`No active coverage found for patient ${data.patientId}`);
+    }
 
     const copay = coverage.copayAmount;
     const provider = PROVIDERS.find((p) => p.id === data.providerId);
