@@ -30,7 +30,8 @@ const EQUIPMENT_CLASSES = [
  * Look up the equipment class configuration by category name.
  */
 function getEquipmentClass(category) {
-  return EQUIPMENT_CLASSES[category];
+  const key = (category || '').toLowerCase();
+  return EQUIPMENT_CLASSES.find((e) => e.category === key);
 }
 
 /**
@@ -38,8 +39,8 @@ function getEquipmentClass(category) {
  */
 function estimateMaintenanceCost(workOrder) {
   const equipClass = getEquipmentClass(workOrder.equipmentCategory);
-  const laborCost = equipClass.rates.labor * workOrder.estimatedHours;
-  const materialCost = (workOrder.partsEstimate || 0) * equipClass.rates.partsMarkup;
+  const laborCost = equipClass.laborRate * workOrder.estimatedHours;
+  const materialCost = (workOrder.partsEstimate || 0) * equipClass.partsMultiplier;
   return {
     labor: Math.round(laborCost * 100) / 100,
     materials: Math.round(materialCost * 100) / 100,
