@@ -87,6 +87,19 @@ describe('scheduleAppointment', () => {
     ).rejects.toThrow('No active coverage found for patient PAT-2001');
   });
 
+  it('should schedule a December appointment within coverage period', async () => {
+    const result = await scheduleAppointment({
+      patientId: 'PAT-2001',
+      providerId: 'DR-101',
+      department: 'primary-care',
+      appointmentDate: '2026-12-15',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.copay).toBe(20);
+    expect(result.date).toBe('2026-12-15');
+  });
+
   it('should use providerId as fallback when provider is not found', async () => {
     const result = await scheduleAppointment({
       patientId: 'PAT-2001',
